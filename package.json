@@ -1,0 +1,30 @@
+{
+  "name": "image-search-api",
+  "version": "0.0.1",
+  "description": "A FCC Project - Image Search Abstraction API",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZackWard/image-search-api.git"
+  },
+  "author": "Zack Ward",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZackWard/image-search-api/issues"
+  },
+  "homepage": "https://github.com/ZackWard/image-search-api#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "express": "^4.14.0",
+    "helmet": "^3.4.0",
+    "mongodb": "^2.2.21"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0"
+  }
+}

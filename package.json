@@ -4,7 +4,7 @@
   "description": "A FCC Project - Image Search Abstraction API",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
+    "test": "set IMAGE_SEARCH_API_MODE=test&mocha",
     "start": "node server.js"
   },
   "repository": {

@@ -1,21 +1,30 @@
-var dotenv = require('dotenv');
-dotenv.config();
-
 var express = require('express');
 var app = express();
-var getGoogleResults = require('./query-google');
+var routes = require('./routes');
+var helmet = require('helmet');
+var mongoSanitize = require('express-mongo-sanitize');
+var db = require('./db');
 
-var searchEndpoint = "https://www.googleapis.com/customsearch/v1?key=" + process.env.IMAGE_SEARCH_API_KEY + "&cx=" + process.env.IMAGE_SEARCH_CSE_ID + "&q=";
-var searchUrl = searchEndpoint + process.argv[2] + "&safe=high&searchType=image&fields=items(link,snippet,image/contextLink,image/thumbnailLink)&start=10";
+var port = 3003;
 
-console.log("Google Custom Search Engine ID: " + process.env.IMAGE_SEARCH_CSE_ID);
-console.log("Google Search API Key: " + process.env.IMAGE_SEARCH_API_KEY);
+// Set up Express middleware
+app.use(helmet());
+app.use(mongoSanitize());
+app.use('/static', express.static('public'));
 
-console.log("Searching for: " + process.argv[2]);
+// Set up routes
+app.use(routes);
 
-getGoogleResults(searchUrl)
-    .then((json) => {console.log(json)})
+// Start server
+db.connect()
+    .then((db) => {
+        app.listen(port, 'localhost', function () {
+            console.log("Express listening on port " + port);
+        });
+    })
     .catch((e) => {
-        console.log(e);
+        console.log("Error: " + e);
         process.exit(1);
     });
+
+module.exports = app;

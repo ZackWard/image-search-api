@@ -1,11 +1,15 @@
+var dotenv = require('dotenv');
+dotenv.config();
 var https = require('https');
 
-module.exports = function getGoogleResults(url) {
+module.exports = function getGoogleResults(query, offset=1) {
     return new Promise(function (resolve, reject) {
-        https.get(url, (res) => {
+        var searchEndpoint = "https://www.googleapis.com/customsearch/v1?key=" + process.env.IMAGE_SEARCH_API_KEY + "&cx=" + process.env.IMAGE_SEARCH_CSE_ID;
+        var searchUrl = searchEndpoint + "&safe=high&searchType=image&fields=items(link,snippet,image/contextLink,image/thumbnailLink)&start=" + offset + "&q=" + query;
+        https.get(searchUrl, (res) => {
             if (res.statusCode !== 200) {
                 res.resume(); // Do this or we'll have a memory leak
-                return reject("Error getting search results from Google!");
+                return reject("Error getting search results from Google! Status: " + res.statusCode);
             }
             if (!/^application\/json/.test(res.headers['content-type'])) {
                 res.resume(); // Do this or we'll have a memory leak

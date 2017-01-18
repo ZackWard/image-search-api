@@ -46,9 +46,45 @@ var clearCollection = function clearCollection(collectionName) {
     });
 };
 
+var addSearchRecord = function addSearchRecord(query) {
+    return new Promise(function (resolve, reject) {
+        if (state.db == null) {
+            return reject("Database unavailable");
+        }
+        var searchRecord = {
+            term: query,
+            when: new Date()
+        };
+        state.db.collection('searches').insertOne(searchRecord)
+            .then((result) => resolve())
+            .catch((err) => reject(err));
+    });
+};
+
+var getSearchHistory = function getSearchHistory() {
+    return new Promise(function (resolve, reject) {
+        if (state.db == null) {
+            return reject("Database unavailable");
+        }
+        state.db.collection('searches').find({})
+            .sort({"when": -1})
+            .limit(10)
+            .project({"_id": 0})
+            .toArray().then((docs) => {
+                docs = docs.map((item) => {
+                    item.when = item.when.toString();
+                    return item;
+                });
+                resolve(docs);
+            }).catch((e) => reject(e));
+    });
+};
+
 
 // Set up module exports
 module.exports.connect = connect;
 module.exports.get = get;
 module.exports.close = close;
 module.exports.clearCollection = clearCollection;
+module.exports.addSearchRecord = addSearchRecord;
+module.exports.getSearchHistory = getSearchHistory;
